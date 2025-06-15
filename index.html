@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Агентство недвижимости</title>
   <style>
+    /* Основные стили */
     body {
       font-family: Arial, sans-serif;
       background: #f7f7f7;
       margin: 0;
       padding: 0;
       color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
       background: #004aad;
@@ -19,27 +23,42 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     header h1 {
       margin: 0;
       font-size: 24px;
+      flex-grow: 1;
+      min-width: 180px;
+    }
+    #lang-switcher {
+      display: flex;
+      gap: 10px;
     }
     #lang-switcher button {
       background: transparent;
-      border: none;
+      border: 2px solid white;
+      border-radius: 4px;
       color: white;
       font-weight: bold;
       cursor: pointer;
-      margin-left: 10px;
+      padding: 5px 10px;
       font-size: 16px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    #lang-switcher button.active {
-      text-decoration: underline;
+    #lang-switcher button.active,
+    #lang-switcher button:hover {
+      background-color: white;
+      color: #004aad;
     }
     .container {
       max-width: 1100px;
-      margin: 20px auto;
+      margin: 20px auto 40px;
       padding: 0 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
     .filters {
       margin-bottom: 20px;
@@ -50,10 +69,19 @@
     }
     .filters label {
       font-weight: bold;
+      white-space: nowrap;
     }
     select, input[type="text"] {
-      padding: 5px;
+      padding: 6px 8px;
       font-size: 14px;
+      border-radius: 4px;
+      border: 1.5px solid #ccc;
+      transition: border-color 0.3s ease;
+      min-width: 150px;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: #004aad;
+      outline: none;
     }
     .cards {
       display: grid;
@@ -68,16 +96,31 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.3s ease;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.4s ease;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeInUp 0.5s forwards;
+    }
+    /* Анимация появления карточки */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .card:hover {
-      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+      box-shadow: 0 8px 20px rgb(0 0 0 / 0.3);
+      transform: translateY(-5px);
     }
     .card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
       flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .card:hover img {
+      transform: scale(1.05);
     }
     .card-body {
       padding: 15px;
@@ -90,30 +133,38 @@
       font-size: 18px;
       font-weight: bold;
       margin: 0 0 10px 0;
+      color: #004aad;
     }
     .card-info {
       font-size: 14px;
       color: #555;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
+      line-height: 1.3;
     }
     .card-price {
       font-size: 16px;
       font-weight: bold;
-      color: #004aad;
+      color: #008000;
+      margin-top: auto;
     }
     /* Модальное окно */
     .modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.7);
       display: none;
       justify-content: center;
       align-items: center;
       padding: 20px;
       z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
     .modal.active {
       display: flex;
+      opacity: 1;
+      pointer-events: auto;
     }
     .modal-content {
       background: white;
@@ -121,26 +172,36 @@
       width: 100%;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
-      animation: slideIn 0.3s ease forwards;
+      box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
+      animation: slideInDown 0.4s ease forwards;
       position: relative;
+      transform: translateY(-30px);
+      opacity: 0;
     }
-    @keyframes slideIn {
-      from {opacity: 0; transform: translateY(-20px);}
-      to {opacity: 1; transform: translateY(0);}
+    .modal.active .modal-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    @keyframes slideInDown {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
     .modal-header {
       background: #004aad;
       color: white;
       padding: 15px 20px;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
+      user-select: none;
     }
     .modal-body {
       padding: 20px;
       display: flex;
       gap: 20px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     .modal-body img {
       max-width: 300px;
@@ -148,31 +209,82 @@
       border-radius: 6px;
       object-fit: cover;
       flex-shrink: 0;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+      transition: transform 0.3s ease;
+    }
+    .modal-body img:hover {
+      transform: scale(1.05);
     }
     .modal-details {
       flex-grow: 1;
       font-size: 16px;
       color: #333;
+      max-width: 350px;
+      line-height: 1.5;
+    }
+    .modal-details p {
+      margin: 8px 0;
     }
     .modal-close {
       position: absolute;
-      top: 10px; right: 10px;
+      top: 12px; right: 12px;
       background: transparent;
       border: none;
       color: white;
-      font-size: 24px;
+      font-size: 28px;
       cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
     }
-    @media(max-width: 768px) {
+    .modal-close:hover {
+      color: #ff4444;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 900px) {
       .modal-body {
         flex-direction: column;
         align-items: center;
       }
-      .modal-body img {
-        max-width: 100%;
-      }
       .modal-details {
+        max-width: 100%;
+        font-size: 15px;
+      }
+      .card img {
+        height: 160px;
+      }
+    }
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      header h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      #lang-switcher button {
         font-size: 14px;
+        padding: 4px 8px;
+      }
+      .filters {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      select, input[type="text"] {
+        min-width: 100%;
+      }
+      .card img {
+        height: 140px;
+      }
+      .card-title {
+        font-size: 16px;
+      }
+      .card-info {
+        font-size: 13px;
+      }
+      .card-price {
+        font-size: 15px;
       }
     }
   </style>
@@ -206,7 +318,7 @@
       </select>
     </div>
     <div class="cards" id="cards-container">
-      <!-- Карточки квартир здесь -->
+      <!-- Карточки квартир -->
     </div>
   </div>
 
@@ -248,7 +360,9 @@
           city: "Город",
           type: "Тип жилья",
           price: "Цена",
+          address: "Адрес",
         },
+        noResults: "Объекты не найдены",
       },
       en: {
         title: "Real Estate Agency",
@@ -274,7 +388,9 @@
           city: "City",
           type: "Type",
           price: "Price",
+          address: "Address",
         },
+        noResults: "No properties found",
       },
     };
 
@@ -374,7 +490,6 @@
       typeEl.options[1].text = t.typeOptions.apartment;
       typeEl.options[2].text = t.typeOptions.house;
 
-      // Обновляем карточки с новым языком
       renderCards();
     }
 
@@ -398,13 +513,14 @@
       });
 
       if (filtered.length === 0) {
-        cardsContainer.innerHTML = `<p>${currentLang === 'ru' ? 'Объекты не найдены' : 'No properties found'}</p>`;
+        cardsContainer.innerHTML = `<p>${t.noResults}</p>`;
         return;
       }
 
-      filtered.forEach(p => {
+      filtered.forEach((p, i) => {
         const card = document.createElement('div');
         card.className = 'card';
+        card.style.animationDelay = (i * 0.1) + 's'; // Плавное появление поочередно
         card.innerHTML = `
           <img src="${p.img}" alt="${p.title[currentLang]}" />
           <div class="card-body">
@@ -412,51 +528,54 @@
             <div class="card-info">${t.details.area}: ${p.area} м²</div>
             <div class="card-info">${t.details.rooms}: ${p.rooms}</div>
             <div class="card-info">${t.details.city}: ${t.cityOptions[p.city]}</div>
+            <div class="card-info">${t.details.type}: ${t.typeOptions[p.type]}</div>
             <div class="card-price">${formatPrice(p.price)}</div>
           </div>
         `;
-        card.addEventListener('click', () => showModal(p));
+        card.addEventListener('click', () => openModal(p));
         cardsContainer.appendChild(card);
       });
     }
 
-    function showModal(property) {
+    function openModal(property) {
+      const t = texts[currentLang];
       modalTitle.textContent = property.title[currentLang];
       modalImg.src = property.img;
       modalImg.alt = property.title[currentLang];
-      const d = texts[currentLang].details;
       modalDetails.innerHTML = `
-        <p><strong>${d.area}:</strong> ${property.area} м²</p>
-        <p><strong>${d.rooms}:</strong> ${property.rooms}</p>
-        <p><strong>${d.city}:</strong> ${texts[currentLang].cityOptions[property.city]}</p>
-        <p><strong>${d.type}:</strong> ${texts[currentLang].typeOptions[property.type]}</p>
-        <p><strong>${d.price}:</strong> ${formatPrice(property.price)}</p>
-        <p><strong>Адрес:</strong> ${property.address}</p>
+        <p><strong>${t.details.address}:</strong> ${property.address}</p>
+        <p><strong>${t.details.area}:</strong> ${property.area} м²</p>
+        <p><strong>${t.details.rooms}:</strong> ${property.rooms}</p>
+        <p><strong>${t.details.city}:</strong> ${t.cityOptions[property.city]}</p>
+        <p><strong>${t.details.type}:</strong> ${t.typeOptions[property.type]}</p>
+        <p><strong>${t.details.price}:</strong> ${formatPrice(property.price)}</p>
       `;
       modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Отключаем скролл фона
     }
 
     function closeModal() {
       modal.classList.remove('active');
+      document.body.style.overflow = ''; // Включаем скролл обратно
     }
 
-    // Переключение языка
-    langButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        currentLang = button.dataset.lang;
-        langButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        updateTexts();
-      });
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
     });
 
-    // Фильтры и поиск
     searchEl.addEventListener('input', renderCards);
     cityEl.addEventListener('change', renderCards);
     typeEl.addEventListener('change', renderCards);
-    modalCloseBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => {
-      if (e.target === modal) closeModal();
+
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.lang === currentLang) return;
+        currentLang = btn.dataset.lang;
+        langButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updateTexts();
+      });
     });
 
     // Инициализация
