@@ -403,98 +403,160 @@
       }
     };
 
-    const properties = [
-      {
-        id: 1,
-        title: {
-          ru: "Современная квартира в Астане",
-          en: "Modern Apartment in Astana",
-          kz: "Астанадағы заманауи пәтер",
-        },
-        address: "ул. Назарбаева, 15",
-        city: "astana",
-        type: "apartment",
-        area: 85,
-        rooms: 3,
-        price: 22000000,
-        img: "https://images.unsplash.com/photo-1560448073-8c8cbbd43898?auto=format&fit=crop&w=800&q=80",
-      },
-      {
-        id: 2,
-        title: {
-          ru: "Уютный дом в Алматы",
-          en: "Cozy House in Almaty",
-          kz: "Алматыдағы жайлы үй",
-        },
-        address: "ул. Панфилова, 40",
-        city: "almaty",
-        type: "house",
-        area: 150,
-        rooms: 4,
-        price: 35000000,
-        img: "https://images.unsplash.com/photo-1501183638714-6f3f1a4b96f8?auto=format&fit=crop&w=800&q=80",
-      },
-      {
-        id: 3,
-        title: {
-          ru: "Коммерческое помещение в Шымкенте",
-          en: "Commercial Space in Shymkent",
-          kz: "Шымкенттегі коммерциялық орын",
-        },
-        address: "пр. Тауке Хана, 100",
-        city: "shymkent",
-        type: "commercial",
-        area: 300,
-        rooms: 0,
-        price: 55000000,
-        img: "https://images.unsplash.com/photo-1560448204-6a92f8f9c691?auto=format&fit=crop&w=800&q=80",
-      },
-      {
-        id: 4,
-        title: {
-          ru: "Квартира с видом на город в Алматы",
-          en: "City View Apartment in Almaty",
-          kz: "Алматыдағы қала көрінісіндегі пәтер",
-        },
-        address: "ул. Абая, 12",
-        city: "almaty",
-        type: "apartment",
-        area: 70,
-        rooms: 2,
-        price: 18000000,
-        img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
-      },
-      {
-        id: 5,
-        title: {
-          ru: "Большой дом в Астане",
-          en: "Large House in Astana",
-          kz: "Астанадағы үлкен үй",
-        },
-        address: "ул. Сейфуллина, 85",
-        city: "astana",
-        type: "house",
-        area: 210,
-        rooms: 5,
-        price: 45000000,
-        img: "https://images.unsplash.com/photo-1572120360610-d971b9b6db3c?auto=format&fit=crop&w=800&q=80",
-      },
-      {
-        id: 6,
-        title: {
-          ru: "Коммерческое помещение в Алматы",
-          en: "Commercial Space in Almaty",
-          kz: "Алматыдағы коммерциялық орын",
-        },
-        address: "пр. Достык, 25",
-        city: "almaty",
-        type: "commercial",
-        area: 280,
-        rooms: 0,
-        price: 60000000,
-        img: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80",
-      },
-    ];
+   const properties = [
+  {
+    id: 1,
+    title: "Квартира в Астане, ЖК «Сарыарка»",
+    price: 10000000,
+    city: "Астана",
+    rooms: 3,
+    area: 75,
+    image: "https://images.unsplash.com/photo-1560448070-1c72b415b9a8?auto=format&fit=crop&w=600&q=80",
+    description: "Современная квартира с видом на парк."
+  },
+  {
+    id: 2,
+    title: "Дом в Алматы, район Бостандык",
+    price: 25000000,
+    city: "Алматы",
+    rooms: 5,
+    area: 150,
+    image: "https://images.unsplash.com/photo-1505692794403-0d2eac62f3b4?auto=format&fit=crop&w=600&q=80",
+    description: "Просторный дом с большим участком."
+  },
+  {
+    id: 3,
+    title: "Студия в Шымкенте",
+    price: 7000000,
+    city: "Шымкент",
+    rooms: 1,
+    area: 35,
+    image: "https://images.unsplash.com/photo-1580582934749-8c00f8e1a3a3?auto=format&fit=crop&w=600&q=80",
+    description: "Уютная студия в центре города."
+  },
+  {
+    id: 4,
+    title: "Квартира в Караганде",
+    price: 8500000,
+    city: "Караганда",
+    rooms: 2,
+    area: 60,
+    image: "https://images.unsplash.com/photo-1556910103-1e31d718e84f?auto=format&fit=crop&w=600&q=80",
+    description: "Светлая квартира в хорошем районе."
+  },
+  {
+    id: 5,
+    title: "Коммерческое помещение в Алматы",
+    price: 30000000,
+    city: "Алматы",
+    rooms: 0,
+    area: 120,
+    image: "https://images.unsplash.com/photo-1560448204-0b8f16a1be42?auto=format&fit=crop&w=600&q=80",
+    description: "Отличное помещение под офис или магазин."
+  },
+  // Добавленные карточки:
+  {
+    id: 6,
+    title: "Квартира в Астане, ЖК «Нурлы Тау»",
+    price: 12000000,
+    city: "Астана",
+    rooms: 4,
+    area: 90,
+    image: "https://images.unsplash.com/photo-1600585154560-91c2721ecf57?auto=format&fit=crop&w=600&q=80",
+    description: "Современный ЖК с хорошей инфраструктурой."
+  },
+  {
+    id: 7,
+    title: "Дом в Алматы, микрорайон Таугуль",
+    price: 27000000,
+    city: "Алматы",
+    rooms: 6,
+    area: 180,
+    image: "https://images.unsplash.com/photo-1572120360610-d971b9b9275e?auto=format&fit=crop&w=600&q=80",
+    description: "Уютный дом с большим двором."
+  },
+  {
+    id: 8,
+    title: "Квартира-студия в Нур-Султане",
+    price: 8000000,
+    city: "Астана",
+    rooms: 1,
+    area: 40,
+    image: "https://images.unsplash.com/photo-1576671080299-d5a7e197504a?auto=format&fit=crop&w=600&q=80",
+    description: "Идеально для молодой семьи или студентов."
+  },
+  {
+    id: 9,
+    title: "Коммерческое помещение в Шымкенте",
+    price: 15000000,
+    city: "Шымкент",
+    rooms: 0,
+    area: 100,
+    image: "https://images.unsplash.com/photo-1590490360186-6502c51d3172?auto=format&fit=crop&w=600&q=80",
+    description: "Отличное место для бизнеса."
+  },
+  {
+    id: 10,
+    title: "Квартира в Павлодаре",
+    price: 9000000,
+    city: "Павлодар",
+    rooms: 3,
+    area: 65,
+    image: "https://images.unsplash.com/photo-1600573479912-1f1d1ca6f8a8?auto=format&fit=crop&w=600&q=80",
+    description: "Теплая квартира в центре города."
+  },
+  {
+    id: 11,
+    title: "Дом в Усть-Каменогорске",
+    price: 22000000,
+    city: "Усть-Каменогорск",
+    rooms: 5,
+    area: 140,
+    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=600&q=80",
+    description: "Просторный дом для большой семьи."
+  },
+  {
+    id: 12,
+    title: "Квартира в Таразе",
+    price: 7500000,
+    city: "Тараз",
+    rooms: 2,
+    area: 55,
+    image: "https://images.unsplash.com/photo-1560448208-cb35c0a91e64?auto=format&fit=crop&w=600&q=80",
+    description: "Уютная квартира с ремонтом."
+  },
+  {
+    id: 13,
+    title: "Коммерческое помещение в Астане",
+    price: 35000000,
+    city: "Астана",
+    rooms: 0,
+    area: 200,
+    image: "https://images.unsplash.com/photo-1593133282624-56362a68f97d?auto=format&fit=crop&w=600&q=80",
+    description: "Большое помещение для бизнеса."
+  },
+  {
+    id: 14,
+    title: "Студия в Алматы, ЖК «Алатау»",
+    price: 6500000,
+    city: "Алматы",
+    rooms: 1,
+    area: 30,
+    image: "https://images.unsplash.com/photo-1580582934394-ade4a4c85b40?auto=format&fit=crop&w=600&q=80",
+    description: "Современная студия с мебелью."
+  },
+  {
+    id: 15,
+    title: "Квартира в Актобе",
+    price: 8000000,
+    city: "Актобе",
+    rooms: 3,
+    area: 70,
+    image: "https://images.unsplash.com/photo-1572120360610-d971b9b9275e?auto=format&fit=crop&w=600&q=80",
+    description: "Просторная квартира для семьи."
+  }
+];
+
 
     const cardsContainer = document.querySelector('.cards-container');
     const searchEl = document.getElementById('search');
