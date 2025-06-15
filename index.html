@@ -3,583 +3,611 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Агентство недвижимости</title>
+  <title>Каталог недвижимости</title>
   <style>
-    /* Основные стили */
+    /* Сброс и базовые стили */
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
       color: #333;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
     header {
-      background: #004aad;
+      background: #3a86ff;
       color: white;
-      padding: 15px 20px;
+      padding: 1rem 2rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
     header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 1.6rem;
       flex-grow: 1;
-      min-width: 180px;
+      min-width: 200px;
     }
-    #lang-switcher {
+    .lang-switch {
       display: flex;
-      gap: 10px;
+      gap: 0.5rem;
     }
-    #lang-switcher button {
-      background: transparent;
-      border: 2px solid white;
-      border-radius: 4px;
+    .lang-switch button {
+      background: #5390d9;
+      border: none;
       color: white;
-      font-weight: bold;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
       cursor: pointer;
-      padding: 5px 10px;
-      font-size: 16px;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
     }
-    #lang-switcher button.active,
-    #lang-switcher button:hover {
-      background-color: white;
-      color: #004aad;
+    .lang-switch button.active,
+    .lang-switch button:hover {
+      background: #f7a072;
+      color: #222;
     }
-    .container {
-      max-width: 1100px;
-      margin: 20px auto 40px;
-      padding: 0 20px;
+
+    main {
       flex-grow: 1;
-      display: flex;
-      flex-direction: column;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+
+    /* Фильтры */
     .filters {
-      margin-bottom: 20px;
       display: flex;
-      gap: 15px;
       flex-wrap: wrap;
-      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      justify-content: center;
     }
     .filters label {
-      font-weight: bold;
-      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #555;
     }
-    select, input[type="text"] {
-      padding: 6px 8px;
-      font-size: 14px;
-      border-radius: 4px;
-      border: 1.5px solid #ccc;
-      transition: border-color 0.3s ease;
+    .filters input[type="search"],
+    .filters select {
+      margin-top: 0.3rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
       min-width: 150px;
+      transition: border-color 0.3s ease;
     }
-    select:focus, input[type="text"]:focus {
-      border-color: #004aad;
+    .filters input[type="search"]:focus,
+    .filters select:focus {
+      border-color: #3a86ff;
       outline: none;
     }
-    .cards {
+
+    /* Карточки */
+    .cards-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
     }
     .card {
       background: white;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
       overflow: hidden;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.4s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeInUp 0.5s ease forwards;
       opacity: 0;
-      transform: translateY(15px);
-      animation: fadeInUp 0.5s forwards;
-    }
-    /* Анимация появления карточки */
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
     .card:hover {
-      box-shadow: 0 8px 20px rgb(0 0 0 / 0.3);
       transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(58, 134, 255, 0.4);
     }
     .card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
+      transition: transform 0.4s ease;
     }
     .card:hover img {
       transform: scale(1.05);
     }
-    .card-body {
-      padding: 15px;
+    .card-content {
+      padding: 0.8rem 1rem;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .card-title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0 0 10px 0;
-      color: #004aad;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      color: #1f2937;
     }
     .card-info {
-      font-size: 14px;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
       color: #555;
-      margin-bottom: 6px;
-      line-height: 1.3;
     }
     .card-price {
-      font-size: 16px;
-      font-weight: bold;
-      color: #008000;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #3a86ff;
       margin-top: auto;
     }
+
     /* Модальное окно */
     .modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.5);
       display: none;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 1rem;
       z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
+      overflow-y: auto;
+      animation: fadeIn 0.3s ease forwards;
     }
     .modal.active {
       display: flex;
-      opacity: 1;
-      pointer-events: auto;
     }
     .modal-content {
       background: white;
-      max-width: 700px;
+      border-radius: 10px;
+      max-width: 600px;
       width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgb(0 0 0 / 0.4);
-      animation: slideInDown 0.4s ease forwards;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
       position: relative;
-      transform: translateY(-30px);
-      opacity: 0;
-    }
-    .modal.active .modal-content {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    @keyframes slideInDown {
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-    .modal-header {
-      background: #004aad;
-      color: white;
-      padding: 15px 20px;
-      font-size: 22px;
-      font-weight: bold;
-      user-select: none;
-    }
-    .modal-body {
-      padding: 20px;
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .modal-body img {
-      max-width: 300px;
-      width: 100%;
-      border-radius: 6px;
-      object-fit: cover;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
-      transition: transform 0.3s ease;
-    }
-    .modal-body img:hover {
-      transform: scale(1.05);
-    }
-    .modal-details {
-      flex-grow: 1;
-      font-size: 16px;
-      color: #333;
-      max-width: 350px;
-      line-height: 1.5;
-    }
-    .modal-details p {
-      margin: 8px 0;
+      animation: slideInDown 0.4s ease forwards;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
     .modal-close {
       position: absolute;
-      top: 12px; right: 12px;
+      top: 10px;
+      right: 15px;
       background: transparent;
       border: none;
-      color: white;
-      font-size: 28px;
+      font-size: 1.8rem;
       cursor: pointer;
-      user-select: none;
+      color: #333;
       transition: color 0.3s ease;
     }
     .modal-close:hover {
-      color: #ff4444;
+      color: #3a86ff;
+    }
+    .modal img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+    .modal-details p {
+      margin: 0.3rem 0;
+      font-size: 1rem;
+      color: #444;
+    }
+
+    /* Анимации */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes slideInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
     }
 
     /* Адаптивность */
-    @media (max-width: 900px) {
-      .modal-body {
+    @media (max-width: 600px) {
+      header {
         flex-direction: column;
-        align-items: center;
+        gap: 0.8rem;
       }
-      .modal-details {
-        max-width: 100%;
-        font-size: 15px;
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filters label {
+        width: 100%;
       }
       .card img {
         height: 160px;
       }
-    }
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
+      .modal-content {
+        padding: 1rem;
       }
-      header h1 {
-        font-size: 20px;
-        margin-bottom: 10px;
-      }
-      #lang-switcher button {
-        font-size: 14px;
-        padding: 4px 8px;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      select, input[type="text"] {
-        min-width: 100%;
-      }
-      .card img {
-        height: 140px;
-      }
-      .card-title {
-        font-size: 16px;
-      }
-      .card-info {
-        font-size: 13px;
-      }
-      .card-price {
-        font-size: 15px;
+      .modal img {
+        height: 200px;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 id="title">Агентство недвижимости</h1>
-    <div id="lang-switcher">
-      <button data-lang="ru" class="active">Рус</button>
-      <button data-lang="en">Eng</button>
+    <h1 data-i18n="title">Каталог недвижимости</h1>
+    <div class="lang-switch" role="group" aria-label="Выбор языка">
+      <button data-lang="ru" class="active" aria-pressed="true">RU</button>
+      <button data-lang="en" aria-pressed="false">EN</button>
+      <button data-lang="kz" aria-pressed="false">KZ</button>
     </div>
   </header>
-  <div class="container">
-    <div class="filters">
-      <label for="search" id="label-search">Поиск:</label>
-      <input type="text" id="search" placeholder="Введите адрес или район" />
 
-      <label for="city" id="label-city">Город:</label>
-      <select id="city">
-        <option value="all">Все</option>
-        <option value="astana">Астана</option>
-        <option value="almaty">Алматы</option>
-        <option value="shymkent">Шымкент</option>
-      </select>
+  <main>
+    <section class="filters" aria-label="Фильтры поиска">
+      <label>
+        <span data-i18n="search">Поиск</span>
+        <input type="search" id="search" placeholder="Например, улица, район..." aria-label="Поле поиска" />
+      </label>
+      <label>
+        <span data-i18n="city">Город</span>
+        <select id="city" aria-label="Выбор города">
+          <option value="all" data-i18n="all">Все</option>
+          <option value="astana">Астана</option>
+          <option value="almaty">Алматы</option>
+          <option value="shymkent">Шымкент</option>
+        </select>
+      </label>
+      <label>
+        <span data-i18n="type">Тип</span>
+        <select id="type" aria-label="Выбор типа недвижимости">
+          <option value="all" data-i18n="all">Все</option>
+          <option value="apartment">Квартира</option>
+          <option value="house">Дом</option>
+          <option value="commercial">Коммерческая</option>
+        </select>
+      </label>
+    </section>
 
-      <label for="type" id="label-type">Тип жилья:</label>
-      <select id="type">
-        <option value="all">Все</option>
-        <option value="apartment">Квартира</option>
-        <option value="house">Дом</option>
-      </select>
-    </div>
-    <div class="cards" id="cards-container">
-      <!-- Карточки квартир -->
-    </div>
-  </div>
+    <section class="cards-container" aria-live="polite" aria-label="Список объектов недвижимости">
+      <!-- Карточки будут динамически вставлены сюда -->
+    </section>
+  </main>
 
   <!-- Модальное окно -->
-  <div class="modal" id="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
     <div class="modal-content">
-      <button class="modal-close" id="modal-close">&times;</button>
-      <div class="modal-header" id="modal-title"></div>
-      <div class="modal-body">
-        <img src="" alt="Фото объекта" id="modal-img" />
-        <div class="modal-details" id="modal-details"></div>
-      </div>
+      <button class="modal-close" aria-label="Закрыть">&times;</button>
+      <h2 id="modalTitle"></h2>
+      <img src="" alt="" />
+      <div class="modal-details"></div>
     </div>
   </div>
 
   <script>
-    const texts = {
-      ru: {
-        title: "Агентство недвижимости",
-        labelSearch: "Поиск:",
-        searchPlaceholder: "Введите адрес или район",
-        labelCity: "Город:",
-        labelType: "Тип жилья:",
-        cityOptions: {
-          all: "Все",
-          astana: "Астана",
-          almaty: "Алматы",
-          shymkent: "Шымкент",
-        },
-        typeOptions: {
-          all: "Все",
-          apartment: "Квартира",
-          house: "Дом",
-        },
-        priceSuffix: "₸",
-        details: {
-          area: "Площадь",
-          rooms: "Комнат",
-          city: "Город",
-          type: "Тип жилья",
-          price: "Цена",
-          address: "Адрес",
-        },
-        noResults: "Объекты не найдены",
-      },
-      en: {
-        title: "Real Estate Agency",
-        labelSearch: "Search:",
-        searchPlaceholder: "Enter address or district",
-        labelCity: "City:",
-        labelType: "Property type:",
-        cityOptions: {
-          all: "All",
-          astana: "Astana",
-          almaty: "Almaty",
-          shymkent: "Shymkent",
-        },
-        typeOptions: {
-          all: "All",
-          apartment: "Apartment",
-          house: "House",
-        },
-        priceSuffix: "₸",
-        details: {
-          area: "Area",
-          rooms: "Rooms",
-          city: "City",
-          type: "Type",
-          price: "Price",
-          address: "Address",
-        },
-        noResults: "No properties found",
-      },
-    };
-
     const properties = [
       {
         id: 1,
-        title: { ru: "Современная квартира в Астане", en: "Modern Apartment in Astana" },
-        city: "astana",
-        type: "apartment",
-        address: "ул. Тауелсиздик, 10",
+        title: {ru: 'Уютная квартира в центре', en: 'Cozy Apartment Downtown', kz: 'Орталықтағы жайлы пәтер'},
+        address: 'ул. Абая, 15',
         area: 75,
         rooms: 3,
-        price: 25000000,
-        img: "https://images.unsplash.com/photo-1560448073-4ac0c0c346e2?auto=format&fit=crop&w=800&q=60",
+        city: 'astana',
+        type: 'apartment',
+        price: 8500000,
+        img: 'https://images.unsplash.com/photo-1560448075-9d6d97e1543b?auto=format&fit=crop&w=800&q=60'
       },
       {
         id: 2,
-        title: { ru: "Уютный дом в Алматы", en: "Cozy House in Almaty" },
-        city: "almaty",
-        type: "house",
-        address: "пр. Абая, 24",
+        title: {ru: 'Современный дом с садом', en: 'Modern House with Garden', kz: 'Бақшасы бар заманауи үй'},
+        address: 'ул. Тимирязева, 47',
         area: 150,
         rooms: 5,
-        price: 50000000,
-        img: "https://images.unsplash.com/photo-1501183638714-2f5a6a6c9b0c?auto=format&fit=crop&w=800&q=60",
+        city: 'almaty',
+        type: 'house',
+        price: 23500000,
+        img: 'https://images.unsplash.com/photo-1600585154058-4a7a4f216d5e?auto=format&fit=crop&w=800&q=60'
       },
       {
         id: 3,
-        title: { ru: "Квартира с видом в Шымкенте", en: "Apartment with a View in Shymkent" },
-        city: "shymkent",
-        type: "apartment",
-        address: "ул. Айтеке Би, 5",
-        area: 60,
-        rooms: 2,
+        title: {ru: 'Коммерческое помещение в бизнес-центре', en: 'Commercial Space in Business Center', kz: 'Бизнес орталығындағы коммерциялық орын'},
+        address: 'пр. Абылайхана, 10',
+        area: 120,
+        rooms: 0,
+        city: 'shymkent',
+        type: 'commercial',
         price: 18000000,
-        img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=60",
+        img: 'https://images.unsplash.com/photo-1560184897-f858d04fca94?auto=format&fit=crop&w=800&q=60'
       },
       {
         id: 4,
-        title: { ru: "Дом с большим участком в Астане", en: "House with Big Yard in Astana" },
-        city: "astana",
-        type: "house",
-        address: "ул. Байтұрсынова, 12",
-        area: 200,
-        rooms: 6,
-        price: 75000000,
-        img: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
+        title: {ru: 'Просторная квартира с видом на парк', en: 'Spacious Apartment with Park View', kz: 'Парктің көрінісі бар кең пәтер'},
+        address: 'ул. Розыбакиева, 85',
+        area: 90,
+        rooms: 4,
+        city: 'almaty',
+        type: 'apartment',
+        price: 9500000,
+        img: 'https://images.unsplash.com/photo-1586105251261-72a756497a9a?auto=format&fit=crop&w=800&q=60'
       },
       {
         id: 5,
-        title: { ru: "Современная квартира в Алматы", en: "Modern Apartment in Almaty" },
-        city: "almaty",
-        type: "apartment",
-        address: "ул. Панфилова, 50",
-        area: 80,
-        rooms: 3,
-        price: 27000000,
-        img: "https://images.unsplash.com/photo-1572120360610-d971b9b91441?auto=format&fit=crop&w=800&q=60",
-      },
+        title: {ru: 'Дом в тихом районе', en: 'House in Quiet Neighborhood', kz: 'Тыныш ауданындағы үй'},
+        address: 'ул. Амангельды, 21',
+        area: 130,
+        rooms: 4,
+        city: 'astana',
+        type: 'house',
+        price: 21000000,
+        img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=800&q=60'
+      }
     ];
 
-    // Элементы интерфейса
-    const langButtons = document.querySelectorAll('#lang-switcher button');
-    const titleEl = document.getElementById('title');
-    const labelSearchEl = document.getElementById('label-search');
+    const texts = {
+      ru: {
+        title: 'Каталог недвижимости',
+        search: 'Поиск',
+        city: 'Город',
+        type: 'Тип',
+        all: 'Все',
+        details: {
+          address: 'Адрес',
+          area: 'Площадь',
+          rooms: 'Комнат',
+          city: 'Город',
+          type: 'Тип',
+          price: 'Цена'
+        },
+        cityOptions: {
+          astana: 'Астана',
+          almaty: 'Алматы',
+          shymkent: 'Шымкент'
+        },
+        typeOptions: {
+          apartment: 'Квартира',
+          house: 'Дом',
+          commercial: 'Коммерческая'
+        }
+      },
+      en: {
+        title: 'Property Catalog',
+        search: 'Search',
+        city: 'City',
+        type: 'Type',
+        all: 'All',
+        details: {
+          address: 'Address',
+          area: 'Area',
+          rooms: 'Rooms',
+          city: 'City',
+          type: 'Type',
+          price: 'Price'
+        },
+        cityOptions: {
+          astana: 'Astana',
+          almaty: 'Almaty',
+          shymkent: 'Shymkent'
+        },
+        typeOptions: {
+          apartment: 'Apartment',
+          house: 'House',
+          commercial: 'Commercial'
+        }
+      },
+      kz: {
+        title: 'Жылжымайтын мүлік каталогы',
+        search: 'Іздеу',
+        city: 'Қала',
+        type: 'Түрі',
+        all: 'Барлығы',
+        details: {
+          address: 'Мекенжай',
+          area: 'Аудан',
+          rooms: 'Бөлмелер',
+          city: 'Қала',
+          type: 'Түрі',
+          price: 'Бағасы'
+        },
+        cityOptions: {
+          astana: 'Астана',
+          almaty: 'Алматы',
+          shymkent: 'Шымкент'
+        },
+        typeOptions: {
+          apartment: 'Пәтер',
+          house: 'Үй',
+          commercial: 'Коммерциялық'
+        }
+      }
+    };
+
+    const cardsContainer = document.querySelector('.cards-container');
     const searchEl = document.getElementById('search');
-    const labelCityEl = document.getElementById('label-city');
-    const cityEl = document.getElementById('city');
-    const labelTypeEl = document.getElementById('label-type');
-    const typeEl = document.getElementById('type');
-    const cardsContainer = document.getElementById('cards-container');
-    const modal = document.getElementById('modal');
-    const modalCloseBtn = document.getElementById('modal-close');
-    const modalTitle = document.getElementById('modal-title');
-    const modalImg = document.getElementById('modal-img');
-    const modalDetails = document.getElementById('modal-details');
+    const citySelect = document.getElementById('city');
+    const typeSelect = document.getElementById('type');
+    const langButtons = document.querySelectorAll('.lang-switch button');
+    const modal = document.querySelector('.modal');
+    const modalTitle = modal.querySelector('#modalTitle');
+    const modalImg = modal.querySelector('img');
+    const modalDetails = modal.querySelector('.modal-details');
+    const modalCloseBtn = modal.querySelector('.modal-close');
 
     let currentLang = 'ru';
 
-    function updateTexts() {
-      const t = texts[currentLang];
-      document.documentElement.lang = currentLang;
-      titleEl.textContent = t.title;
-      labelSearchEl.textContent = t.labelSearch;
-      searchEl.placeholder = t.searchPlaceholder;
-      labelCityEl.textContent = t.labelCity;
-      labelTypeEl.textContent = t.labelType;
-
-      // Обновляем опции городов
-      cityEl.options[0].text = t.cityOptions.all;
-      cityEl.options[1].text = t.cityOptions.astana;
-      cityEl.options[2].text = t.cityOptions.almaty;
-      cityEl.options[3].text = t.cityOptions.shymkent;
-
-      // Обновляем опции типов жилья
-      typeEl.options[0].text = t.typeOptions.all;
-      typeEl.options[1].text = t.typeOptions.apartment;
-      typeEl.options[2].text = t.typeOptions.house;
-
-      renderCards();
-    }
-
-    function formatPrice(price) {
-      return price.toLocaleString() + ' ' + texts[currentLang].priceSuffix;
-    }
-
-    function renderCards() {
-      const t = texts[currentLang];
-      const searchTerm = searchEl.value.toLowerCase();
-      const cityFilter = cityEl.value;
-      const typeFilter = typeEl.value;
-
+    // Отрисовка карточек недвижимости
+    function renderCards(items) {
       cardsContainer.innerHTML = '';
-
-      const filtered = properties.filter(p => {
-        const matchesSearch = p.address.toLowerCase().includes(searchTerm) || p.title[currentLang].toLowerCase().includes(searchTerm);
-        const matchesCity = cityFilter === 'all' || p.city === cityFilter;
-        const matchesType = typeFilter === 'all' || p.type === typeFilter;
-        return matchesSearch && matchesCity && matchesType;
-      });
-
-      if (filtered.length === 0) {
-        cardsContainer.innerHTML = `<p>${t.noResults}</p>`;
+      if (items.length === 0) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.textContent = currentLang === 'ru' ? 'Объекты не найдены.' : (currentLang === 'en' ? 'No properties found.' : 'Нысандар табылмады.');
+        cardsContainer.appendChild(emptyMsg);
         return;
       }
+      items.forEach((item, index) => {
+        const card = document.createElement('article');
+        card.classList.add('card');
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-pressed', 'false');
+        card.setAttribute('aria-label', `${item.title[currentLang]}, ${texts[currentLang].typeOptions[item.type]}, ${texts[currentLang].cityOptions[item.city]}, ${item.price.toLocaleString()} тг`);
 
-      filtered.forEach((p, i) => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.style.animationDelay = (i * 0.1) + 's'; // Плавное появление поочередно
         card.innerHTML = `
-          <img src="${p.img}" alt="${p.title[currentLang]}" />
-          <div class="card-body">
-            <h3 class="card-title">${p.title[currentLang]}</h3>
-            <div class="card-info">${t.details.area}: ${p.area} м²</div>
-            <div class="card-info">${t.details.rooms}: ${p.rooms}</div>
-            <div class="card-info">${t.details.city}: ${t.cityOptions[p.city]}</div>
-            <div class="card-info">${t.details.type}: ${t.typeOptions[p.type]}</div>
-            <div class="card-price">${formatPrice(p.price)}</div>
+          <img src="${item.img}" alt="${item.title[currentLang]}" loading="lazy" />
+          <div class="card-content">
+            <h3 class="card-title">${item.title[currentLang]}</h3>
+            <p class="card-info">${texts[currentLang].details.address}: ${item.address}</p>
+            <p class="card-info">${texts[currentLang].details.area}: ${item.area} м²</p>
+            <p class="card-info">${texts[currentLang].details.rooms}: ${item.rooms > 0 ? item.rooms : '-'}</p>
+            <p class="card-price">${item.price.toLocaleString()} ₸</p>
           </div>
         `;
-        card.addEventListener('click', () => openModal(p));
+
+        card.addEventListener('click', () => openModal(item));
+        card.addEventListener('keydown', e => {
+          if(e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(item);
+          }
+        });
+
         cardsContainer.appendChild(card);
       });
     }
 
+    // Фильтрация по введенным параметрам
+    function filterProperties() {
+      const searchTerm = searchEl.value.trim().toLowerCase();
+      const cityValue = citySelect.value;
+      const typeValue = typeSelect.value;
+
+      let filtered = properties.filter(p => {
+        let matchesSearch = p.title[currentLang].toLowerCase().includes(searchTerm) || p.address.toLowerCase().includes(searchTerm);
+        let matchesCity = cityValue === 'all' || p.city === cityValue;
+        let matchesType = typeValue === 'all' || p.type === typeValue;
+
+        return matchesSearch && matchesCity && matchesType;
+      });
+
+      renderCards(filtered);
+    }
+
+    // Открыть модальное окно с подробной информацией
     function openModal(property) {
-      const t = texts[currentLang];
       modalTitle.textContent = property.title[currentLang];
       modalImg.src = property.img;
       modalImg.alt = property.title[currentLang];
+
       modalDetails.innerHTML = `
-        <p><strong>${t.details.address}:</strong> ${property.address}</p>
-        <p><strong>${t.details.area}:</strong> ${property.area} м²</p>
-        <p><strong>${t.details.rooms}:</strong> ${property.rooms}</p>
-        <p><strong>${t.details.city}:</strong> ${t.cityOptions[property.city]}</p>
-        <p><strong>${t.details.type}:</strong> ${t.typeOptions[property.type]}</p>
-        <p><strong>${t.details.price}:</strong> ${formatPrice(property.price)}</p>
+        <p><strong>${texts[currentLang].details.address}:</strong> ${property.address}</p>
+        <p><strong>${texts[currentLang].details.area}:</strong> ${property.area} м²</p>
+        <p><strong>${texts[currentLang].details.rooms}:</strong> ${property.rooms > 0 ? property.rooms : '-'}</p>
+        <p><strong>${texts[currentLang].details.city}:</strong> ${texts[currentLang].cityOptions[property.city]}</p>
+        <p><strong>${texts[currentLang].details.type}:</strong> ${texts[currentLang].typeOptions[property.type]}</p>
+        <p><strong>${texts[currentLang].details.price}:</strong> ${property.price.toLocaleString()} ₸</p>
       `;
+
       modal.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Отключаем скролл фона
+      modal.setAttribute('tabindex', '0');
+      modal.focus();
+      document.body.style.overflow = 'hidden'; // Запретить прокрутку фона
     }
 
+    // Закрыть модальное окно
     function closeModal() {
       modal.classList.remove('active');
-      document.body.style.overflow = ''; // Включаем скролл обратно
+      document.body.style.overflow = '';
     }
 
     modalCloseBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener('click', e => {
       if (e.target === modal) closeModal();
     });
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
 
-    searchEl.addEventListener('input', renderCards);
-    cityEl.addEventListener('change', renderCards);
-    typeEl.addEventListener('change', renderCards);
+    // Переключение языка
+    function switchLanguage(lang) {
+      if (!texts[lang]) return;
 
+      currentLang = lang;
+
+      // Обновить тексты в интерфейсе
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (texts[lang][key]) {
+          el.textContent = texts[lang][key];
+        }
+      });
+
+      // Обновить плейсхолдеры и опции селектов
+      searchEl.placeholder = texts[lang].search + '...';
+      // Обновляем опции select городов
+      for (const option of citySelect.options) {
+        const val = option.value;
+        if (val === 'all') {
+          option.textContent = texts[lang].all;
+        } else if (texts[lang].cityOptions[val]) {
+          option.textContent = texts[lang].cityOptions[val];
+        }
+      }
+      // Обновляем опции select типов
+      for (const option of typeSelect.options) {
+        const val = option.value;
+        if (val === 'all') {
+          option.textContent = texts[lang].all;
+        } else if (texts[lang].typeOptions[val]) {
+          option.textContent = texts[lang].typeOptions[val];
+        }
+      }
+
+      // Обновляем активную кнопку
+      langButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+        btn.setAttribute('aria-pressed', btn.dataset.lang === lang);
+      });
+
+      filterProperties();
+    }
+
+    // События фильтров и поиска
+    searchEl.addEventListener('input', filterProperties);
+    citySelect.addEventListener('change', filterProperties);
+    typeSelect.addEventListener('change', filterProperties);
+
+    // События переключения языка
     langButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (btn.dataset.lang === currentLang) return;
-        currentLang = btn.dataset.lang;
-        langButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updateTexts();
+        switchLanguage(btn.dataset.lang);
       });
     });
 
     // Инициализация
-    updateTexts();
+    switchLanguage(currentLang);
   </script>
 </body>
 </html>
