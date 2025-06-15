@@ -1,279 +1,214 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Агентство недвижимости</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    background: #eef2f7;
-    color: #333;
-  }
-  header {
-    background-color: #2a7ae2;
-    color: white;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  }
-  header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 2.4rem;
-  }
-  header p {
-    margin-top: 6px;
-    font-size: 1.1rem;
-    font-weight: 500;
-  }
-
-  .search-form {
-    max-width: 900px;
-    margin: 30px auto;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  select, input[type=number] {
-    padding: 12px 15px;
-    font-size: 1rem;
-    border: 1.8px solid #ddd;
-    border-radius: 8px;
-    width: 160px;
-    transition: border-color 0.3s;
-  }
-  select:focus, input[type=number]:focus {
-    outline: none;
-    border-color: #2a7ae2;
-    box-shadow: 0 0 5px #2a7ae2aa;
-  }
-  button {
-    padding: 12px 25px;
-    background-color: #2a7ae2;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  button:hover {
-    background-color: #1f5fc1;
-  }
-
-  .listings {
-    max-width: 1100px;
-    margin: 0 auto 60px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
-    gap: 25px;
-    padding: 0 20px;
-  }
-  .card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease;
-  }
-  .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.18);
-  }
-  .card img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-  }
-  .card-content {
-    padding: 20px 18px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .card-content h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.25rem;
-    color: #2a7ae2;
-  }
-  .card-content p {
-    margin: 6px 0;
-    font-size: 0.95rem;
-    color: #555;
-  }
-  .price {
-    margin-top: 12px;
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: #1b3a8a;
-  }
-  .no-results {
-    max-width: 900px;
-    margin: 60px auto;
-    font-style: italic;
-    font-size: 1.2rem;
-    color: #777;
-    text-align: center;
-  }
-
-  /* Responsive */
-  @media(max-width: 500px) {
-    .search-form {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Агентство недвижимости</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin:0; padding:0; background: #f5f7fa;
+      color: #333;
+    }
+    header {
+      background: #004aad;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 1rem auto;
+      padding: 0 1rem;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    select, input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      min-width: 150px;
+    }
+    #properties-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+      gap: 1rem;
+    }
+    .property-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      display: flex;
       flex-direction: column;
-      max-width: 320px;
-      margin: 20px auto;
+      height: 100%;
     }
-    select, input[type=number], button {
+    .property-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 12px rgb(0 0 0 / 0.15);
+    }
+    .property-card img {
       width: 100%;
-    }
-    .card img {
       height: 160px;
+      object-fit: cover;
     }
-  }
-</style>
+    .property-content {
+      padding: 1rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .property-content h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+      color: #004aad;
+    }
+    .property-content p {
+      margin: 0.3rem 0;
+      flex-grow: 1;
+    }
+    .property-content .price {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      color: #009688;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #004aad;
+      color: white;
+      margin-top: 2rem;
+    }
+    @media (max-width: 480px) {
+      .filters {
+        flex-direction: column;
+      }
+      select, input[type="text"] {
+        min-width: auto;
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <header>
   <h1>Агентство недвижимости</h1>
-  <p>Найдите дом своей мечты!</p>
 </header>
 
-<section class="search-form" aria-label="Форма поиска недвижимости">
-  <select id="type" aria-label="Тип недвижимости">
-    <option value="">Все типы</option>
-    <option value="квартира">Квартира</option>
-    <option value="дом">Дом</option>
-    <option value="коммерческая">Коммерческая</option>
-  </select>
-  <select id="city" aria-label="Город">
-    <option value="">Все города</option>
-    <option value="Алматы">Алматы</option>
-    <option value="Нур-Султан">Нур-Султан</option>
-    <option value="Шымкент">Шымкент</option>
-  </select>
-  <input type="number" id="priceMin" placeholder="Цена от, млн ₸" min="0" aria-label="Минимальная цена" />
-  <input type="number" id="priceMax" placeholder="Цена до, млн ₸" min="0" aria-label="Максимальная цена" />
-  <button onclick="filterListings()">Поиск</button>
-  <button onclick="resetFilters()">Сбросить</button>
-</section>
+<div class="container">
+  <div class="filters">
+    <select id="filter-type">
+      <option value="">Все типы</option>
+      <option value="квартира">Квартира</option>
+      <option value="дом">Дом</option>
+      <option value="коммерческая">Коммерческая</option>
+    </select>
 
-<section class="listings" id="listings" aria-live="polite" aria-label="Список объектов недвижимости">
-  <!-- Карточки недвижимости -->
-</section>
+    <select id="filter-city">
+      <option value="">Все города</option>
+      <option value="Алматы">Алматы</option>
+      <option value="Астана">Астана</option>
+      <option value="Шымкент">Шымкент</option>
+    </select>
+
+    <input type="text" id="search-title" placeholder="Поиск по названию..." />
+  </div>
+
+  <div id="properties-list">
+    <!-- Карточки объектов появятся здесь -->
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 Агентство недвижимости
+</footer>
 
 <script>
-// Данные объектов с картинками (ссылки с Unsplash для примера)
-const properties = [
-  {
-    id:1,
-    title:"Уютная квартира в Алматы",
-    type:"квартира",
-    city:"Алматы",
-    price: 15,
-    img:"https://images.unsplash.com/photo-1560448204-7a47f5722269?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id:2,
-    title:"Большой дом с участком",
-    type:"дом",
-    city:"Нур-Султан",
-    price: 45,
-    img:"https://images.unsplash.com/photo-1600585154035-22a17f5f86c8?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id:3,
-    title:"Офисное помещение",
-    type:"коммерческая",
-    city:"Алматы",
-    price: 30,
-    img:"https://images.unsplash.com/photo-1572120360610-d971b9bfa5f5?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id:4,
-    title:"Квартира с видом на горы",
-    type:"квартира",
-    city:"Шымкент",
-    price: 18,
-    img:"https://images.unsplash.com/photo-1501183638714-56b6ad6a89e7?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id:5,
-    title:"Загородный дом у озера",
-    type:"дом",
-    city:"Алматы",
-    price: 50,
-    img:"https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?auto=format&fit=crop&w=600&q=80"
-  },
-  {
-    id:6,
-    title:"Торговое помещение",
-    type:"коммерческая",
-    city:"Нур-Султан",
-    price: 25,
-    img:"https://images.unsplash.com/photo-1542223616-0f5b34ac8f49?auto=format&fit=crop&w=600&q=80"
-  },
-];
-
-const listingsContainer = document.getElementById('listings');
-
-function renderListings(list) {
-  listingsContainer.innerHTML = '';
-  if(list.length === 0){
-    listingsContainer.innerHTML = '<p class="no-results">Объекты не найдены</p>';
-    return;
-  }
-  list.forEach(p => {
-    const card = document.createElement('article');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${p.img}" alt="Фото объекта: ${p.title}" loading="lazy" />
-      <div class="card-content">
-        <h3>${p.title}</h3>
-        <p><strong>Тип:</strong> ${p.type}</p>
-        <p><strong>Город:</strong> ${p.city}</p>
-        <p class="price">Цена: ${p.price} млн ₸</p>
-      </div>
-    `;
-    listingsContainer.appendChild(card);
-  });
-}
-
-function filterListings() {
-  const type = document.getElementById('type').value;
-  const city = document.getElementById('city').value;
-  const priceMin = Number(document.getElementById('priceMin').value);
-  const priceMax = Number(document.getElementById('priceMax').value);
-
-  let filtered = properties.filter(p => {
-    if(type && p.type !== type) return false;
-    if(city && p.city !== city) return false;
-    if(priceMin && p.price < priceMin) return false;
-    if(priceMax && p.price > priceMax) return false;
-    return true;
-  });
-
-  renderListings(filtered);
-}
-
-function resetFilters() {
-  document.getElementById('type').value = '';
-  document.getElementById('city').value = '';
-  document.getElementById('priceMin').value = '';
-  document.getElementById('priceMax').value = '';
-  renderListings(properties);
-}
-
-// Показать все объекты при загрузке страницы
-renderListings(properties);
-</script>
-
-</body>
-</html>
+  const properties = [
+    {
+      id:1,
+      title:"Уютная квартира в Алматы",
+      type:"квартира",
+      city:"Алматы",
+      price: 15,
+      img:"https://images.unsplash.com/photo-1560448204-7a47f5722269?auto=format&fit=crop&w=600&q=80",
+      description: "Современная квартира в центре Алматы с отличным ремонтом, двумя спальнями и видом на парк."
+    },
+    {
+      id:2,
+      title:"Большой дом с участком",
+      type:"дом",
+      city:"Астана",
+      price: 45,
+      img:"https://images.unsplash.com/photo-1600585154035-22a17f5f86c8?auto=format&fit=crop&w=600&q=80",
+      description: "Просторный дом с садом и гаражом в тихом районе Астаны, идеально для большой семьи."
+    },
+    {
+      id:3,
+      title:"Офисное помещение",
+      type:"коммерческая",
+      city:"Алматы",
+      price: 30,
+      img:"https://images.unsplash.com/photo-1572120360610-d971b9bfa5f5?auto=format&fit=crop&w=600&q=80",
+      description: "Современное офисное помещение в деловом центре Алматы с удобным доступом и парковкой."
+    },
+    {
+      id:4,
+      title:"Квартира с видом на горы",
+      type:"квартира",
+      city:"Шымкент",
+      price: 18,
+      img:"https://images.unsplash.com/photo-1501183638714-56b6ad6a89e7?auto=format&fit=crop&w=600&q=80",
+      description: "Квартира с просторной кухней и панорамными окнами, из которых открывается великолепный вид на горы."
+    },
+    {
+      id:5,
+      title:"Загородный дом у озера",
+      type:"дом",
+      city:"Алматы",
+      price: 50,
+      img:"https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?auto=format&fit=crop&w=600&q=80",
+      description: "Роскошный дом возле озера с большим участком земли, идеальное место для отдыха и уединения."
+    },
+    {
+      id:6,
+      title:"Торговое помещение",
+      type:"коммерческая",
+      city:"Астана",
+      price: 25,
+      img:"https://images.unsplash.com/photo-1542223616-0f5b34ac8f49?auto=format&fit=crop&w=600&q=80",
+      description: "Торговое помещение с высоким пешеходным трафиком и большими витринами в центре города."
+    },
+    {
+      id:7,
+      title:"Современная квартира в Астане",
+      type:"квартира",
+      city:"Астана",
+      price: 20,
+      img:"https://images.unsplash.com/photo-1560448074-7c9499c1b04c?auto=format&fit=crop&w=600&q=80",
+      description: "Квартира с дизайнерским ремонтом, полностью меблирована, рядом парк и метро."
+    },
+    {
+      id:8,
+      title:"Студия в центре Алматы",
+      type:"квартира",
+      city:"Алматы",
+      price: 10,
+      img:"https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
+      description: "Уютная студия для молодого человека или пары, отличное расположение."
+    },
+    {
+      id:9,
+      tit
