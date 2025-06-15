@@ -107,6 +107,68 @@
         min-width: 100%;
       }
     }
+    /* Модальное окно */
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+    #modal.active {
+      display: flex;
+    }
+    #modal-content {
+      background: white;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      position: relative;
+      padding-bottom: 20px;
+    }
+    #modal-content img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+    }
+    #modal-content .modal-body {
+      padding: 15px 20px;
+    }
+    #modal-content h2 {
+      margin-top: 0;
+      color: #0066cc;
+    }
+    #modal-content p {
+      margin: 10px 0;
+      line-height: 1.4;
+    }
+    #modal-content .price {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #009688;
+      margin-top: 10px;
+    }
+    #modal-content .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+    }
+    #modal-content .close-btn:hover {
+      color: #0066cc;
+    }
   </style>
 </head>
 <body>
@@ -136,6 +198,21 @@
 
   <div id="properties-list" role="list" aria-live="polite">
     <!-- Карточки объектов -->
+  </div>
+</div>
+
+<!-- Модальное окно -->
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+  <div id="modal-content">
+    <button class="close-btn" aria-label="Закрыть модальное окно">&times;</button>
+    <img src="" alt="" id="modal-img" />
+    <div class="modal-body">
+      <h2 id="modal-title"></h2>
+      <p id="modal-description"></p>
+      <p><strong>Город:</strong> <span id="modal-city"></span></p>
+      <p><strong>Тип:</strong> <span id="modal-type"></span></p>
+      <p class="price" id="modal-price"></p>
+    </div>
   </div>
 </div>
 
@@ -261,6 +338,16 @@
     const filterCity = document.getElementById("filter-city");
     const searchTitle = document.getElementById("search-title");
 
+    // Модальные элементы
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modal-img");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDesc = document.getElementById("modal-description");
+    const modalCity = document.getElementById("modal-city");
+    const modalType = document.getElementById("modal-type");
+    const modalPrice = document.getElementById("modal-price");
+    const modalCloseBtn = modal.querySelector(".close-btn");
+
     function renderProperties(list) {
       propertiesList.innerHTML = "";
       if (list.length === 0) {
@@ -271,7 +358,7 @@
         const card = document.createElement("div");
         card.className = "property-card";
         card.setAttribute("role", "listitem");
-        card.tabIndex = 0; // чтобы можно было на клавиатуре выделять
+        card.tabIndex = 0;
         card.innerHTML = `
           <img src="${p.img}" alt="Фото объекта: ${p.title}" />
           <div class="property-info">
@@ -281,17 +368,49 @@
             <div class="property-price">${p.price} млн ₸</div>
           </div>
         `;
-        card.addEventListener("click", () => {
-          alert(`Подробности объекта:\n\n${p.title}\n\n${p.description}\n\nЦена: ${p.price} млн ₸\nГород: ${p.city}\nТип: ${p.type}`);
-        });
+        card.addEventListener("click", () => openModal(p));
         card.addEventListener("keypress", (e) => {
           if (e.key === "Enter" || e.key === " ") {
-            card.click();
+            openModal(p);
           }
         });
         propertiesList.appendChild(card);
       });
     }
+
+    function openModal(property) {
+      modalImg.src = property.img;
+      modalImg.alt = "Фото объекта: " + property.title;
+      modalTitle.textContent = property.title;
+      modalDesc.textContent = property.description;
+      modalCity.textContent = property.city;
+      modalType.textContent = property.type;
+      modalPrice.textContent = property.price + " млн ₸";
+
+      modal.classList.add("active");
+      modal.focus();
+      document.body.style.overflow = "hidden"; // Отключить скролл страницы
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    modalCloseBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) { // клик вне окна
+        closeModal();
+      }
+    });
+
+    // Закрытие модалки по ESC
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
 
     function applyFilters() {
       const typeVal = filterType.value.toLowerCase();
