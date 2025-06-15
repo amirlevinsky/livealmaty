@@ -5,437 +5,462 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Агентство недвижимости</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f4f8;
-      color: #222;
+      padding: 0;
+      color: #333;
     }
     header {
-      background-color: #0066cc;
+      background: #004aad;
       color: white;
-      padding: 20px;
-      text-align: center;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    #lang-switcher button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+    #lang-switcher button.active {
+      text-decoration: underline;
     }
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 20px auto;
-      padding: 0 15px;
+      padding: 0 20px;
     }
     .filters {
+      margin-bottom: 20px;
       display: flex;
-      flex-wrap: wrap;
       gap: 15px;
-      margin-bottom: 25px;
-      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filters label {
+      font-weight: bold;
     }
     select, input[type="text"] {
-      padding: 10px 15px;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      min-width: 180px;
-      transition: border-color 0.3s ease;
+      padding: 5px;
+      font-size: 14px;
     }
-    select:focus, input[type="text"]:focus {
-      border-color: #0066cc;
-      outline: none;
-    }
-    #properties-list {
+    .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
       gap: 20px;
     }
-    .property-card {
+    .card {
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
       overflow: hidden;
+      cursor: pointer;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s ease;
-      height: 100%;
+      transition: box-shadow 0.3s ease;
     }
-    .property-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    .card:hover {
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
     }
-    .property-card img {
+    .card img {
       width: 100%;
-      height: 170px;
+      height: 180px;
       object-fit: cover;
-      border-bottom: 1px solid #ddd;
+      flex-shrink: 0;
     }
-    .property-info {
+    .card-body {
       padding: 15px;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     }
-    .property-info h3 {
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
       margin: 0 0 10px 0;
-      color: #0066cc;
-      font-size: 1.2rem;
     }
-    .property-info p {
-      margin: 3px 0;
-      flex-grow: 1;
+    .card-info {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
     }
-    .property-price {
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: #009688;
-      margin-top: 10px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background-color: #0066cc;
-      color: white;
-      margin-top: 40px;
-    }
-    @media (max-width: 480px) {
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      select, input[type="text"] {
-        min-width: 100%;
-      }
+    .card-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #004aad;
     }
     /* Модальное окно */
-    #modal {
-      display: none;
+    .modal {
       position: fixed;
-      z-index: 9999;
-      left: 0; top: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 20px;
+      z-index: 1000;
     }
-    #modal.active {
+    .modal.active {
       display: flex;
     }
-    #modal-content {
+    .modal-content {
       background: white;
-      border-radius: 10px;
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+      animation: slideIn 0.3s ease forwards;
       position: relative;
-      padding-bottom: 20px;
     }
-    #modal-content img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      border-radius: 10px 10px 0 0;
+    @keyframes slideIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
     }
-    #modal-content .modal-body {
+    .modal-header {
+      background: #004aad;
+      color: white;
       padding: 15px 20px;
-    }
-    #modal-content h2 {
-      margin-top: 0;
-      color: #0066cc;
-    }
-    #modal-content p {
-      margin: 10px 0;
-      line-height: 1.4;
-    }
-    #modal-content .price {
-      font-weight: 700;
-      font-size: 1.3rem;
-      color: #009688;
-      margin-top: 10px;
-    }
-    #modal-content .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 28px;
+      font-size: 20px;
       font-weight: bold;
-      color: #333;
-      cursor: pointer;
-      border: none;
-      background: transparent;
     }
-    #modal-content .close-btn:hover {
-      color: #0066cc;
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .modal-body img {
+      max-width: 300px;
+      width: 100%;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .modal-details {
+      flex-grow: 1;
+      font-size: 16px;
+      color: #333;
+    }
+    .modal-close {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    @media(max-width: 768px) {
+      .modal-body {
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-body img {
+        max-width: 100%;
+      }
+      .modal-details {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1 id="title">Агентство недвижимости</h1>
+    <div id="lang-switcher">
+      <button data-lang="ru" class="active">Рус</button>
+      <button data-lang="en">Eng</button>
+    </div>
+  </header>
+  <div class="container">
+    <div class="filters">
+      <label for="search" id="label-search">Поиск:</label>
+      <input type="text" id="search" placeholder="Введите адрес или район" />
 
-<header>
-  <h1>Агентство недвижимости</h1>
-</header>
+      <label for="city" id="label-city">Город:</label>
+      <select id="city">
+        <option value="all">Все</option>
+        <option value="astana">Астана</option>
+        <option value="almaty">Алматы</option>
+        <option value="shymkent">Шымкент</option>
+      </select>
 
-<div class="container">
-  <div class="filters">
-    <select id="filter-type" aria-label="Выбор типа недвижимости">
-      <option value="">Все типы</option>
-      <option value="квартира">Квартира</option>
-      <option value="дом">Дом</option>
-      <option value="коммерческая">Коммерческая</option>
-    </select>
-
-    <select id="filter-city" aria-label="Выбор города">
-      <option value="">Все города</option>
-      <option value="Алматы">Алматы</option>
-      <option value="Астана">Астана</option>
-      <option value="Шымкент">Шымкент</option>
-    </select>
-
-    <input type="text" id="search-title" placeholder="Поиск по названию..." aria-label="Поиск по названию" />
-  </div>
-
-  <div id="properties-list" role="list" aria-live="polite">
-    <!-- Карточки объектов -->
-  </div>
-</div>
-
-<!-- Модальное окно -->
-<div id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
-  <div id="modal-content">
-    <button class="close-btn" aria-label="Закрыть модальное окно">&times;</button>
-    <img src="" alt="" id="modal-img" />
-    <div class="modal-body">
-      <h2 id="modal-title"></h2>
-      <p id="modal-description"></p>
-      <p><strong>Город:</strong> <span id="modal-city"></span></p>
-      <p><strong>Тип:</strong> <span id="modal-type"></span></p>
-      <p class="price" id="modal-price"></p>
+      <label for="type" id="label-type">Тип жилья:</label>
+      <select id="type">
+        <option value="all">Все</option>
+        <option value="apartment">Квартира</option>
+        <option value="house">Дом</option>
+      </select>
+    </div>
+    <div class="cards" id="cards-container">
+      <!-- Карточки квартир здесь -->
     </div>
   </div>
-</div>
 
-<footer>
-  &copy; 2025 Агентство недвижимости
-</footer>
+  <!-- Модальное окно -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-header" id="modal-title"></div>
+      <div class="modal-body">
+        <img src="" alt="Фото объекта" id="modal-img" />
+        <div class="modal-details" id="modal-details"></div>
+      </div>
+    </div>
+  </div>
 
-<script>
-  (function() {
+  <script>
+    const texts = {
+      ru: {
+        title: "Агентство недвижимости",
+        labelSearch: "Поиск:",
+        searchPlaceholder: "Введите адрес или район",
+        labelCity: "Город:",
+        labelType: "Тип жилья:",
+        cityOptions: {
+          all: "Все",
+          astana: "Астана",
+          almaty: "Алматы",
+          shymkent: "Шымкент",
+        },
+        typeOptions: {
+          all: "Все",
+          apartment: "Квартира",
+          house: "Дом",
+        },
+        priceSuffix: "₸",
+        details: {
+          area: "Площадь",
+          rooms: "Комнат",
+          city: "Город",
+          type: "Тип жилья",
+          price: "Цена",
+        },
+      },
+      en: {
+        title: "Real Estate Agency",
+        labelSearch: "Search:",
+        searchPlaceholder: "Enter address or district",
+        labelCity: "City:",
+        labelType: "Property type:",
+        cityOptions: {
+          all: "All",
+          astana: "Astana",
+          almaty: "Almaty",
+          shymkent: "Shymkent",
+        },
+        typeOptions: {
+          all: "All",
+          apartment: "Apartment",
+          house: "House",
+        },
+        priceSuffix: "₸",
+        details: {
+          area: "Area",
+          rooms: "Rooms",
+          city: "City",
+          type: "Type",
+          price: "Price",
+        },
+      },
+    };
+
     const properties = [
       {
-        id:1,
-        title:"Уютная квартира в Алматы",
-        type:"квартира",
-        city:"Алматы",
-        price: 15,
-        img:"https://images.unsplash.com/photo-1560448204-7a47f5722269?auto=format&fit=crop&w=600&q=80",
-        description: "Современная квартира в центре Алматы с отличным ремонтом, двумя спальнями и видом на парк."
+        id: 1,
+        title: { ru: "Современная квартира в Астане", en: "Modern Apartment in Astana" },
+        city: "astana",
+        type: "apartment",
+        address: "ул. Тауелсиздик, 10",
+        area: 75,
+        rooms: 3,
+        price: 25000000,
+        img: "https://images.unsplash.com/photo-1560448073-4ac0c0c346e2?auto=format&fit=crop&w=800&q=60",
       },
       {
-        id:2,
-        title:"Большой дом с участком",
-        type:"дом",
-        city:"Астана",
-        price: 45,
-        img:"https://images.unsplash.com/photo-1600585154035-22a17f5f86c8?auto=format&fit=crop&w=600&q=80",
-        description: "Просторный дом с садом и гаражом в тихом районе Астаны, идеально для большой семьи."
+        id: 2,
+        title: { ru: "Уютный дом в Алматы", en: "Cozy House in Almaty" },
+        city: "almaty",
+        type: "house",
+        address: "пр. Абая, 24",
+        area: 150,
+        rooms: 5,
+        price: 50000000,
+        img: "https://images.unsplash.com/photo-1501183638714-2f5a6a6c9b0c?auto=format&fit=crop&w=800&q=60",
       },
       {
-        id:3,
-        title:"Офисное помещение",
-        type:"коммерческая",
-        city:"Алматы",
-        price: 30,
-        img:"https://images.unsplash.com/photo-1572120360610-d971b9bfa5f5?auto=format&fit=crop&w=600&q=80",
-        description: "Современное офисное помещение в деловом центре Алматы с удобным доступом и парковкой."
+        id: 3,
+        title: { ru: "Квартира с видом в Шымкенте", en: "Apartment with a View in Shymkent" },
+        city: "shymkent",
+        type: "apartment",
+        address: "ул. Айтеке Би, 5",
+        area: 60,
+        rooms: 2,
+        price: 18000000,
+        img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=60",
       },
       {
-        id:4,
-        title:"Квартира с видом на горы",
-        type:"квартира",
-        city:"Шымкент",
-        price: 18,
-        img:"https://images.unsplash.com/photo-1501183638714-56b6ad6a89e7?auto=format&fit=crop&w=600&q=80",
-        description: "Квартира с просторной кухней и панорамными окнами, из которых открывается великолепный вид на горы."
+        id: 4,
+        title: { ru: "Дом с большим участком в Астане", en: "House with Big Yard in Astana" },
+        city: "astana",
+        type: "house",
+        address: "ул. Байтұрсынова, 12",
+        area: 200,
+        rooms: 6,
+        price: 75000000,
+        img: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
       },
       {
-        id:5,
-        title:"Загородный дом у озера",
-        type:"дом",
-        city:"Алматы",
-        price: 50,
-        img:"https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?auto=format&fit=crop&w=600&q=80",
-        description: "Роскошный дом возле озера с большим участком земли, идеальное место для отдыха и уединения."
+        id: 5,
+        title: { ru: "Современная квартира в Алматы", en: "Modern Apartment in Almaty" },
+        city: "almaty",
+        type: "apartment",
+        address: "ул. Панфилова, 50",
+        area: 80,
+        rooms: 3,
+        price: 27000000,
+        img: "https://images.unsplash.com/photo-1572120360610-d971b9b91441?auto=format&fit=crop&w=800&q=60",
       },
-      {
-        id:6,
-        title:"Торговое помещение",
-        type:"коммерческая",
-        city:"Астана",
-        price: 25,
-        img:"https://images.unsplash.com/photo-1542223616-0f5b34ac8f49?auto=format&fit=crop&w=600&q=80",
-        description: "Торговое помещение с высоким пешеходным трафиком и большими витринами в центре города."
-      },
-      {
-        id:7,
-        title:"Современная квартира в Астане",
-        type:"квартира",
-        city:"Астана",
-        price: 20,
-        img:"https://images.unsplash.com/photo-1560448074-7c9499c1b04c?auto=format&fit=crop&w=600&q=80",
-        description: "Квартира с дизайнерским ремонтом, полностью меблирована, рядом парк и метро."
-      },
-      {
-        id:8,
-        title:"Студия в центре Алматы",
-        type:"квартира",
-        city:"Алматы",
-        price: 10,
-        img:"https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
-        description: "Уютная студия для молодого человека или пары, отличное расположение."
-      },
-      {
-        id:9,
-        title:"Большая квартира с ремонтом",
-        type:"квартира",
-        city:"Шымкент",
-        price: 22,
-        img:"https://images.unsplash.com/photo-1501183638714-56b6ad6a89e7?auto=format&fit=crop&w=600&q=80",
-        description: "Просторная квартира с современным ремонтом, 3 спальни, кухня-гостиная."
-      },
-      {
-        id:10,
-        title:"Квартира с балконом в Астане",
-        type:"квартира",
-        city:"Астана",
-        price: 17,
-        img:"https://images.unsplash.com/photo-1556911220-e15b29be8c02?auto=format&fit=crop&w=600&q=80",
-        description: "Светлая квартира с балконом, рядом школы и магазины."
-      },
-      {
-        id:11,
-        title:"Новая квартира в ЖК",
-        type:"квартира",
-        city:"Алматы",
-        price: 19,
-        img:"https://images.unsplash.com/photo-1560448077-6d2d49f2f365?auto=format&fit=crop&w=600&q=80",
-        description: "Квартира в новом жилом комплексе с развитой инфраструктурой и охраной."
-      },
-      {
-        id:12,
-        title:"Маленькая квартира в центре",
-        type:"квартира",
-        city:"Шымкент",
-        price: 9,
-        img:"https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=80",
-        description: "Небольшая квартира с минимальным ремонтом, отличный вариант для сдачи в аренду."
-      }
     ];
 
-    const propertiesList = document.getElementById("properties-list");
-    const filterType = document.getElementById("filter-type");
-    const filterCity = document.getElementById("filter-city");
-    const searchTitle = document.getElementById("search-title");
+    // Элементы интерфейса
+    const langButtons = document.querySelectorAll('#lang-switcher button');
+    const titleEl = document.getElementById('title');
+    const labelSearchEl = document.getElementById('label-search');
+    const searchEl = document.getElementById('search');
+    const labelCityEl = document.getElementById('label-city');
+    const cityEl = document.getElementById('city');
+    const labelTypeEl = document.getElementById('label-type');
+    const typeEl = document.getElementById('type');
+    const cardsContainer = document.getElementById('cards-container');
+    const modal = document.getElementById('modal');
+    const modalCloseBtn = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalImg = document.getElementById('modal-img');
+    const modalDetails = document.getElementById('modal-details');
 
-    // Модальные элементы
-    const modal = document.getElementById("modal");
-    const modalImg = document.getElementById("modal-img");
-    const modalTitle = document.getElementById("modal-title");
-    const modalDesc = document.getElementById("modal-description");
-    const modalCity = document.getElementById("modal-city");
-    const modalType = document.getElementById("modal-type");
-    const modalPrice = document.getElementById("modal-price");
-    const modalCloseBtn = modal.querySelector(".close-btn");
+    let currentLang = 'ru';
 
-    function renderProperties(list) {
-      propertiesList.innerHTML = "";
-      if (list.length === 0) {
-        propertiesList.innerHTML = "<p>Объекты не найдены.</p>";
+    function updateTexts() {
+      const t = texts[currentLang];
+      document.documentElement.lang = currentLang;
+      titleEl.textContent = t.title;
+      labelSearchEl.textContent = t.labelSearch;
+      searchEl.placeholder = t.searchPlaceholder;
+      labelCityEl.textContent = t.labelCity;
+      labelTypeEl.textContent = t.labelType;
+
+      // Обновляем опции городов
+      cityEl.options[0].text = t.cityOptions.all;
+      cityEl.options[1].text = t.cityOptions.astana;
+      cityEl.options[2].text = t.cityOptions.almaty;
+      cityEl.options[3].text = t.cityOptions.shymkent;
+
+      // Обновляем опции типов жилья
+      typeEl.options[0].text = t.typeOptions.all;
+      typeEl.options[1].text = t.typeOptions.apartment;
+      typeEl.options[2].text = t.typeOptions.house;
+
+      // Обновляем карточки с новым языком
+      renderCards();
+    }
+
+    function formatPrice(price) {
+      return price.toLocaleString() + ' ' + texts[currentLang].priceSuffix;
+    }
+
+    function renderCards() {
+      const t = texts[currentLang];
+      const searchTerm = searchEl.value.toLowerCase();
+      const cityFilter = cityEl.value;
+      const typeFilter = typeEl.value;
+
+      cardsContainer.innerHTML = '';
+
+      const filtered = properties.filter(p => {
+        const matchesSearch = p.address.toLowerCase().includes(searchTerm) || p.title[currentLang].toLowerCase().includes(searchTerm);
+        const matchesCity = cityFilter === 'all' || p.city === cityFilter;
+        const matchesType = typeFilter === 'all' || p.type === typeFilter;
+        return matchesSearch && matchesCity && matchesType;
+      });
+
+      if (filtered.length === 0) {
+        cardsContainer.innerHTML = `<p>${currentLang === 'ru' ? 'Объекты не найдены' : 'No properties found'}</p>`;
         return;
       }
-      list.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "property-card";
-        card.setAttribute("role", "listitem");
-        card.tabIndex = 0;
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
         card.innerHTML = `
-          <img src="${p.img}" alt="Фото объекта: ${p.title}" />
-          <div class="property-info">
-            <h3>${p.title}</h3>
-            <p><strong>Тип:</strong> ${p.type}</p>
-            <p><strong>Город:</strong> ${p.city}</p>
-            <div class="property-price">${p.price} млн ₸</div>
+          <img src="${p.img}" alt="${p.title[currentLang]}" />
+          <div class="card-body">
+            <h3 class="card-title">${p.title[currentLang]}</h3>
+            <div class="card-info">${t.details.area}: ${p.area} м²</div>
+            <div class="card-info">${t.details.rooms}: ${p.rooms}</div>
+            <div class="card-info">${t.details.city}: ${t.cityOptions[p.city]}</div>
+            <div class="card-price">${formatPrice(p.price)}</div>
           </div>
         `;
-        card.addEventListener("click", () => openModal(p));
-        card.addEventListener("keypress", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            openModal(p);
-          }
-        });
-        propertiesList.appendChild(card);
+        card.addEventListener('click', () => showModal(p));
+        cardsContainer.appendChild(card);
       });
     }
 
-    function openModal(property) {
+    function showModal(property) {
+      modalTitle.textContent = property.title[currentLang];
       modalImg.src = property.img;
-      modalImg.alt = "Фото объекта: " + property.title;
-      modalTitle.textContent = property.title;
-      modalDesc.textContent = property.description;
-      modalCity.textContent = property.city;
-      modalType.textContent = property.type;
-      modalPrice.textContent = property.price + " млн ₸";
-
-      modal.classList.add("active");
-      modal.focus();
-      document.body.style.overflow = "hidden"; // Отключить скролл страницы
+      modalImg.alt = property.title[currentLang];
+      const d = texts[currentLang].details;
+      modalDetails.innerHTML = `
+        <p><strong>${d.area}:</strong> ${property.area} м²</p>
+        <p><strong>${d.rooms}:</strong> ${property.rooms}</p>
+        <p><strong>${d.city}:</strong> ${texts[currentLang].cityOptions[property.city]}</p>
+        <p><strong>${d.type}:</strong> ${texts[currentLang].typeOptions[property.type]}</p>
+        <p><strong>${d.price}:</strong> ${formatPrice(property.price)}</p>
+        <p><strong>Адрес:</strong> ${property.address}</p>
+      `;
+      modal.classList.add('active');
     }
 
     function closeModal() {
-      modal.classList.remove("active");
-      document.body.style.overflow = "";
+      modal.classList.remove('active');
     }
 
-    modalCloseBtn.addEventListener("click", closeModal);
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) { // клик вне окна
-        closeModal();
-      }
-    });
-
-    // Закрытие модалки по ESC
-    window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("active")) {
-        closeModal();
-      }
-    });
-
-    function applyFilters() {
-      const typeVal = filterType.value.toLowerCase();
-      const cityVal = filterCity.value.toLowerCase();
-      const searchVal = searchTitle.value.trim().toLowerCase();
-
-      const filtered = properties.filter(p => {
-        const matchType = typeVal === "" || p.type.toLowerCase() === typeVal;
-        const matchCity = cityVal === "" || p.city.toLowerCase() === cityVal;
-        const matchSearch = p.title.toLowerCase().includes(searchVal);
-        return matchType && matchCity && matchSearch;
+    // Переключение языка
+    langButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        currentLang = button.dataset.lang;
+        langButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        updateTexts();
       });
+    });
 
-      renderProperties(filtered);
-    }
+    // Фильтры и поиск
+    searchEl.addEventListener('input', renderCards);
+    cityEl.addEventListener('change', renderCards);
+    typeEl.addEventListener('change', renderCards);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if (e.target === modal) closeModal();
+    });
 
     // Инициализация
-    renderProperties(properties);
-
-    // События фильтров
-    filterType.addEventListener("change", applyFilters);
-    filterCity.addEventListener("change", applyFilters);
-    searchTitle.addEventListener("input", applyFilters);
-  })();
-</script>
-
+    updateTexts();
+  </script>
 </body>
 </html>
